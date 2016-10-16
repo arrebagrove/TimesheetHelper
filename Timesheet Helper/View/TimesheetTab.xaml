@@ -7,7 +7,7 @@
              xmlns:local="clr-namespace:TimesheetHelper.View"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid DockPanel.Dock="Left">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"></ColumnDefinition>
             <ColumnDefinition Width="1*"></ColumnDefinition>
@@ -28,7 +28,7 @@
                 <RowDefinition Height="30"></RowDefinition>
             </Grid.RowDefinitions>
             <Label Grid.Row="0" Grid.Column="0" MinWidth="50" MinHeight="10" 
-               Margin="0 0 10 0" VerticalAlignment="Center" Content="Excel File :">
+               Margin="0 0 10 0" HorizontalAlignment="Center" Content="Excel File :">
             </Label>
             <TextBox Name="txtExcelPath" IsEnabled="True" Padding="0 5" MinHeight="30"
                  Grid.Row="0" Grid.Column="1"
@@ -41,24 +41,14 @@
             </TextBox>
         </Grid>
 
-        <Grid Grid.Row="1" Grid.Column="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"></ColumnDefinition>
-                <ColumnDefinition Width="1*"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="30"></RowDefinition>
-                <RowDefinition Height="30"></RowDefinition>
-            </Grid.RowDefinitions>
-            <Button Name="btnNewFile" Grid.Column="0" Grid.Row="0" Margin="5" 
-                    Padding="10 0" HorizontalAlignment="Stretch" Content="New File" 
-                    Click="btnNewFile_Click">
-            </Button>
-            <Button Name="btnLoadFile" Margin="5" Padding="10 0" HorizontalAlignment="Stretch"
-                            Grid.Column="1" Grid.Row="0" Content="Load" 
+        <Button Name="btnSelectDir" Grid.Column="0" Grid.Row="1" Margin="5" 
+                    Padding="10 0" HorizontalAlignment="Stretch" Content="Change Directory" 
+                    Click="btnSelectDir_Click">
+        </Button>
+        <Button Name="btnLoadFile" Margin="5" Padding="10 0" HorizontalAlignment="Stretch"
+                            Grid.Column="1" Grid.Row="1" Content="Load Excel File" 
                     Click="btnLoadFile_Click">
-            </Button>
-        </Grid>
-        
+        </Button>
+
     </Grid>
 </UserControl>
