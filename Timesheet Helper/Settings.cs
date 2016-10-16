@@ -159,7 +159,25 @@ namespace TimesheetHelper
                 OnPropertyChanged("StudentID");
             }
         }
+
+        private bool _folderByMonth;
+        public bool FolderByMonth
+        {
+            get
+            {
+                return _folderByMonth;
+            }
+            set
+            {
+                this._folderByMonth = value;
+                OnPropertyChanged("FolderByMonth");
+            }
+        }
         #endregion
+
+        // TODO(batuhan): Para karsiliginda otomatik timesheet doldurma ac aylik? konu bulmak zor.
+        // Non-saved options.
+        private string mCalculatedPath;
 
         private static Settings _programSettings = null;
         public static Settings CurrentSettings
@@ -180,6 +198,7 @@ namespace TimesheetHelper
                 _programSettings.AutoSaveMinutes = value.AutoSaveMinutes;
                 _programSettings.ExcelFile = value.ExcelFile;
                 _programSettings.FilePath = value.FilePath;
+                _programSettings.FolderByMonth = value.FolderByMonth;
                 _programSettings.Message = value.Message;
                 _programSettings.Name = value.Name;
                 _programSettings.PopupMinutes = value.PopupMinutes;
@@ -190,12 +209,50 @@ namespace TimesheetHelper
             }
         }
 
+        public string CalculatedPath()
+        {
+            if (string.IsNullOrEmpty(mCalculatedPath))
+            {
+                return _calculateFilePath();
+            }
+            else
+            {
+                return mCalculatedPath;
+            }
+        }
+
+        private string _calculateFilePath()
+        {
+            if (this.FilePath == null || this.ExcelFile == null)
+            {
+                throw new NullReferenceException("Null reference on filepath or excel file!");
+            }
+            else
+            {
+                string result = this.FilePath;
+                if (this.FolderByMonth)
+                {
+                    result += System.DateTime.Today.Month.ToString();
+                    result += "\\";
+                }
+                result += this.ExcelFile;
+                return result;
+            }
+        }
+
+        public void Rollback()
+        {
+            CurrentSettings = InitialSettings();
+        }
+
         public static Settings InitialSettings()
         {
             Settings opt = new Settings();
             DateTime date = System.DateTime.Now;
             opt.ExcelFile = "Timesheet_" + date.Day.ToString() +
                 "_" + date.Month.ToString() + "_" + date.Year.ToString();
+            opt.FilePath = "timesheet\\";
+            opt.FolderByMonth = false;
             opt.Message = "Don't forget to change settings.";
             opt.AutoSaveMinutes = 15;
             opt.ShowPopupEachSave = true;
