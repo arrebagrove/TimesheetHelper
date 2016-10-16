@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -213,12 +214,10 @@ namespace TimesheetHelper
         {
             if (string.IsNullOrEmpty(mCalculatedPath))
             {
-                return _calculateFilePath();
+                mCalculatedPath = _calculateFilePath();
             }
-            else
-            {
-                return mCalculatedPath;
-            }
+
+            return mCalculatedPath;
         }
 
         private string _calculateFilePath()
@@ -232,12 +231,23 @@ namespace TimesheetHelper
                 string result = this.FilePath;
                 if (this.FolderByMonth)
                 {
-                    result += System.DateTime.Today.Month.ToString();
+                    int month = System.DateTime.Today.Month;
+                    string monthName = _getMonthName(month);
+                    result += System.DateTime.Today.Month.ToString("00");
+                    result += " ";
+                    result += monthName;
                     result += "\\";
                 }
                 result += this.ExcelFile;
                 return result;
             }
+        }
+
+        private string _getMonthName(int monthNumber)
+        {
+            DateTime temp = new DateTime(2010, monthNumber, 10);
+
+            return temp.ToString("MMM", CultureInfo.CurrentCulture);
         }
 
         public void Rollback()
