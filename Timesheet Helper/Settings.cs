@@ -176,9 +176,20 @@ namespace TimesheetHelper
         }
         #endregion
 
-        // TODO(batuhan): Para karsiliginda otomatik timesheet doldurma ac aylik? konu bulmak zor.
         // Non-saved options.
         private string mCalculatedPath;
+        public string CalculatedPath
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(mCalculatedPath))
+                {
+                    mCalculatedPath = _calculateFilePath();
+                }
+
+                return mCalculatedPath;
+            }
+        }
 
         private static Settings _programSettings = null;
         public static Settings CurrentSettings
@@ -208,16 +219,6 @@ namespace TimesheetHelper
                 _programSettings.StudentID = value.StudentID;
                 _programSettings.Surname = value.Surname;
             }
-        }
-
-        public string CalculatedPath()
-        {
-            if (string.IsNullOrEmpty(mCalculatedPath))
-            {
-                mCalculatedPath = _calculateFilePath();
-            }
-
-            return mCalculatedPath;
         }
 
         private string _calculateFilePath()
