@@ -17,7 +17,7 @@ namespace TimesheetHelper
             var serializer = new Newtonsoft.Json.JsonSerializer();
             FileStream fileStream = null;
             StreamWriter writer = null;
-            
+
             try
             {
                 fileStream = new FileStream(fileName, FileMode.Create);
@@ -44,7 +44,7 @@ namespace TimesheetHelper
                 options = ParseOptions(fileName);
             }
             else
-            {                
+            {
                 options = Settings.InitialSettings();
                 Save(options);
             }
@@ -54,8 +54,10 @@ namespace TimesheetHelper
 
         private static Settings ParseOptions(string fileName)
         {
-            Settings options = new Settings();
+            Settings options = new Settings();            
             var deserializer = new Newtonsoft.Json.JsonSerializer();
+            deserializer.MissingMemberHandling = Newtonsoft.Json.MissingMemberHandling.Error;            
+
             FileStream fileStream = null;
             StreamReader reader = null;
 
@@ -69,7 +71,7 @@ namespace TimesheetHelper
             {
                 System.Diagnostics.Debug.WriteLine(ex.Message);
                 // NOTE(batuhan): Failed to parse? What to do?
-                options = Settings.InitialSettings();               
+                options = Settings.InitialSettings();
             }
             finally
             {
