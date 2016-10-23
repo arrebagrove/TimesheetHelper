@@ -41,13 +41,13 @@
             </TextBox>
         </Grid>
 
-        <Button Name="btnSelectDir" Grid.Column="0" Grid.Row="1" Margin="5" 
-                    Padding="10 0" HorizontalAlignment="Stretch" Content="Change Directory" 
-                    Click="btnSelectDir_Click">
+        <Button Name="btnChangeDir" Grid.Column="0" Grid.Row="1" Margin="5" 
+                Padding="10 0" HorizontalAlignment="Stretch" Content="Change Directory"
+                Click="btnChangeDir_Click">
         </Button>
         <Button Name="btnLoadFile" Margin="5" Padding="10 0" HorizontalAlignment="Stretch"
-                            Grid.Column="1" Grid.Row="1" Content="Load Excel File" 
-                    Click="btnLoadFile_Click">
+                Grid.Column="1" Grid.Row="1" Content="Load Excel File" 
+                Click="btnLoadFile_Click">
         </Button>
 
     </Grid>

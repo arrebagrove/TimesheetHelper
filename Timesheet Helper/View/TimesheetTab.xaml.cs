@@ -22,16 +22,14 @@ namespace TimesheetHelper.View
     /// </summary>
     public partial class TimesheetTab: UserControl
     {
+        ExcelOperator excel;
+
         public TimesheetTab()
         {
             InitializeComponent();
 
             this.DataContext = TimesheetHelper.Settings.CurrentSettings;
             //this.DataContext = TimesheetHelper.Settings.InitialSettings();
-        }
-
-        private void btnNewFile_Click(object sender, RoutedEventArgs e)
-        {
         }
 
         private void btnLoadFile_Click(object sender, RoutedEventArgs e)
@@ -49,10 +47,14 @@ namespace TimesheetHelper.View
             if (fileDialog.ShowDialog() == true)
             {
                 string fullPath = fileDialog.FileName;
-                System.Diagnostics.Debug.WriteLine(fullPath);
                 TimesheetHelper.Settings.CurrentSettings.ExcelFile = fileDialog.SafeFileName;
                 TimesheetHelper.Settings.CurrentSettings.FilePath = fullPath.Substring(0, fullPath.LastIndexOf('\\') + 1);
             }
+        }
+
+        private void btnChangeDir_Click(object sender, RoutedEventArgs e)
+        {
+            //excel = new ExcelOperator(TimesheetHelper.Settings.CurrentSettings.CalculatedPath);
         }
     }
 }
