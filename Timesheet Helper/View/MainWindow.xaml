@@ -11,8 +11,10 @@
         <TabItem Header="Time-sheet">
             <local:TimesheetTab></local:TimesheetTab>
         </TabItem>
-    
-        <TabItem Header="Settings"></TabItem>
+        
+        <TabItem Header="Settings">
+            <local:SettingsTab></local:SettingsTab>
+        </TabItem>
         <TabItem Header="About"></TabItem>
     </TabControl>
 </Window>
