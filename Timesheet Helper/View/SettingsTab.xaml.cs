@@ -18,11 +18,13 @@ namespace TimesheetHelper.View
     /// <summary>
     /// Interaction logic for Settings.xaml
     /// </summary>
-    public partial class Settings : UserControl
+    public partial class SettingsTab : UserControl
     {
-        public Settings()
+        public SettingsTab()
         {
             InitializeComponent();
+
+            this.DataContext = TimesheetHelper.Settings.CurrentSettings;
         }
     }
 }
