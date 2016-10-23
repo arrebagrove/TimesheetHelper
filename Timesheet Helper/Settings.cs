@@ -5,13 +5,16 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 
 namespace TimesheetHelper
 {
     public class Settings: INotifyPropertyChanged
-    {
+    { 
         #region Members/Properties
+
         private string _excelFile;
+        [DisplayName("Excel File")]
         public string ExcelFile
         {
             get
@@ -22,11 +25,12 @@ namespace TimesheetHelper
             set
             {
                 this._excelFile = value;
-                OnPropertyChanged("ExcelFile");
+                mCalculatedPath = null;
+                OnPropertyChanged();
             }
         }
 
-        private string _filePath;
+        private string _filePath;        
         public string FilePath
         {
             get
@@ -37,11 +41,13 @@ namespace TimesheetHelper
             set
             {
                 this._filePath = value;
-                OnPropertyChanged("FilePath");
+                mCalculatedPath = null;
+                OnPropertyChanged();
             }
         }
 
         private string _message;
+        [DisplayName("Topic")]
         public string Message
         {
             get
@@ -52,11 +58,28 @@ namespace TimesheetHelper
             set
             {
                 this._message = value;
-                OnPropertyChanged("Message");
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _autoWrite;
+        [DisplayName("Auto Write")]
+        public bool AutoWrite
+        {
+            get
+            {
+                return _autoWrite;
+            }
+
+            set
+            {
+                _autoWrite = value;
+                OnPropertyChanged();
             }
         }
 
         private int _saveMins;
+        [DisplayName("Auto Write Timer(min)")]
         public int AutoSaveMinutes
         {
             get
@@ -66,12 +89,18 @@ namespace TimesheetHelper
 
             set
             {
+                if (value <= 0)
+                {
+                    AutoWrite = false;
+                    value = 0;
+                }
                 this._saveMins = value;
-                OnPropertyChanged("AutoSaveMinutes");
+                OnPropertyChanged();
             }
         }
 
         private bool _showPopupEachSave;
+        [DisplayName("Show Popup for each write")]
         public bool ShowPopupEachSave
         {
             get
@@ -82,11 +111,12 @@ namespace TimesheetHelper
             set
             {
                 this._showPopupEachSave = value;
-                OnPropertyChanged("ShowPopupEachSave");
+                OnPropertyChanged();
             }
         }
 
         private int _popupMinutes;
+        [DisplayName("Reminder Popup Timer(min)")]
         public int PopupMinutes
         {
             get
@@ -96,12 +126,19 @@ namespace TimesheetHelper
 
             set
             {
+                if (value <= 0)
+                {
+                    ShowPopupWithTimer = false;
+                    value = 0;                    
+                }
+
                 this._popupMinutes = value;
-                OnPropertyChanged("PopupMinutes");
+                OnPropertyChanged();
             }
         }
 
         private bool _showPopupWithTimer;
+        [DisplayName("Reminder Popup")]
         public bool ShowPopupWithTimer
         {
             get
@@ -110,13 +147,14 @@ namespace TimesheetHelper
             }
 
             set
-            {
+            {                
                 this._showPopupWithTimer = value;
-                OnPropertyChanged("ShowPopupWithTimer");
+                OnPropertyChanged();
             }
         }
 
         private string _name;
+        [DisplayName("Name Surname")]
         public string Name
         {
             get
@@ -127,26 +165,28 @@ namespace TimesheetHelper
             set
             {
                 this._name = value;
-                OnPropertyChanged("Name");
+                OnPropertyChanged();
             }
         }
 
-        private string _surname;
-        public string Surname
+        private string _team;
+        [DisplayName("Team Name")]
+        public string Team
         {
             get
             {
-                return this._surname;
+                return this._team;
             }
 
             set
             {
-                this._surname = value;
-                OnPropertyChanged("Surname");
+                this._team = value;
+                OnPropertyChanged();
             }
         }
 
         private string _studentID;
+        [DisplayName("Student ID")]
         public string StudentID
         {
             get
@@ -157,11 +197,12 @@ namespace TimesheetHelper
             set
             {
                 this._studentID = value;
-                OnPropertyChanged("StudentID");
+                OnPropertyChanged();
             }
         }
 
         private bool _folderByMonth;
+        [DisplayName("Categorize by month")]
         public bool FolderByMonth
         {
             get
@@ -171,7 +212,7 @@ namespace TimesheetHelper
             set
             {
                 this._folderByMonth = value;
-                OnPropertyChanged("FolderByMonth");
+                OnPropertyChanged();
             }
         }
         #endregion
@@ -206,18 +247,22 @@ namespace TimesheetHelper
 
             set
             {
-                //_programSettings = value;                
-                _programSettings.AutoSaveMinutes = value.AutoSaveMinutes;
+                //_programSettings = value;
+                //OnGlobalPropertyChanged(string.Empty);
+
+                // TODO(batuhan): Fix me.
+                _programSettings.AutoWrite = value.AutoWrite;
+                _programSettings.AutoSaveMinutes = value.AutoSaveMinutes;                
                 _programSettings.ExcelFile = value.ExcelFile;
                 _programSettings.FilePath = value.FilePath;
                 _programSettings.FolderByMonth = value.FolderByMonth;
                 _programSettings.Message = value.Message;
                 _programSettings.Name = value.Name;
-                _programSettings.PopupMinutes = value.PopupMinutes;
+                _programSettings.PopupMinutes = value.PopupMinutes;                
                 _programSettings.ShowPopupEachSave = value.ShowPopupEachSave;
                 _programSettings.ShowPopupWithTimer = value.ShowPopupWithTimer;
                 _programSettings.StudentID = value.StudentID;
-                _programSettings.Surname = value.Surname;
+                _programSettings.Team = value.Team;
             }
         }
 
@@ -256,6 +301,12 @@ namespace TimesheetHelper
             CurrentSettings = InitialSettings();
         }
 
+        public Settings()
+        {
+            // NOTE(batuhan): Weak event handler for static instance.
+            GlobalPropertyChanged += this.PropertyChanged;
+        }
+
         public static Settings InitialSettings()
         {
             Settings opt = new Settings();
@@ -269,15 +320,21 @@ namespace TimesheetHelper
             opt.ShowPopupEachSave = true;
             opt.PopupMinutes = 30;
             opt.ShowPopupWithTimer = false;
-            opt.Name = "Name";
-            opt.Surname = "Surname";
+            opt.Name = "Full Name";
+            opt.Team = "Team no/name";
             opt.StudentID = "ID";
 
             return opt;
         }
 
+        public static event PropertyChangedEventHandler GlobalPropertyChanged;
+        protected static void OnGlobalPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            GlobalPropertyChanged?.Invoke(typeof(Settings), new PropertyChangedEventArgs(propertyName));
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string name)
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
