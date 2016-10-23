@@ -63,6 +63,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ExcelOperator.cs" />
+    <Compile Include="Extension\DisplayNameExtension.cs" />
+    <Compile Include="ModelView\SettingsViewModel.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SettingParser.cs" />
     <Compile Include="View\SettingsTab.xaml.cs">
@@ -148,6 +150,9 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Model\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
